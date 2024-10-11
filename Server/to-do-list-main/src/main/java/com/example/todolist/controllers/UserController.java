@@ -18,7 +18,34 @@ import java.util.Map;
 public class UserController {
   @Autowired
   private UserRepository userRepository;
+  
+  @PostMapping("/signin")
+  public ResponseEntity<Map<String, ?>> signin(@RequestBody User inputUser) {
+    System.out.println("Username nhận được: " + inputUser.getUsername());
+    System.out.println("Mật khẩu nhận được: " + inputUser.getPassword());
 
+    // Tìm user dựa trên username
+    User checkUser = userRepository.findByUsername(inputUser.getUsername());
+
+    // Kiểm tra xem user có tồn tại không
+    if (checkUser != null) {
+      Map<String, String> errorResponse = new HashMap<>();
+      errorResponse.put("message", "Tên người dùng đã tồn tại!");
+      return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
+    // Nếu đúng thông tin đăng nhập
+    inputUser.setScore(0);  // Điểm khởi tạo là 0
+    inputUser.setStatus("online");  // Trạng thái khởi tạo là "online"
+    inputUser.setPosition(0);  // Điểm khởi tạo là 0
+
+    userRepository.save(inputUser);
+    Map<String, Object> successResponse = new HashMap<>();
+    successResponse.put("user", inputUser);
+    successResponse.put("list", userRepository.findAllUsersWithSelectedColumns());
+    return new ResponseEntity<>(successResponse, HttpStatus.OK);
+  }
+  
   @PostMapping("/login")
   public ResponseEntity<Map<String, ?>> login(@RequestBody User inputUser) {
     System.out.println("Username nhận được: " + inputUser.getUsername());
