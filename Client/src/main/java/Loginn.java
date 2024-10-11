@@ -31,7 +31,8 @@ public class Loginn extends JFrame implements ActionListener {
     private JTextField txtUsername;
     private JPasswordField txtPassword;
     private JButton btnLogin;
-
+    private JButton btnSign;
+    
     public Loginn() {
         super("Login");        
         txtUsername = new JTextField(15);
@@ -67,8 +68,15 @@ public class Loginn extends JFrame implements ActionListener {
         pnMain.add(btnLogin);    
         pnMain.add(Box.createRigidArea(new Dimension(0, 10)));
         btnLogin.addActionListener(this);    
+
+        JPanel pnSignin = new JPanel();
+        pnSignin.add(new JLabel("Nếu bạn chưa có acount :"));
+        btnSign = new JButton("Đăng ký");
+        pnSignin.add(btnSign);
+        pnMain.add(pnSignin);
+        btnSign.addActionListener(this);
         
-        this.setSize(400, 200);                
+        this.setSize(400, 250);                
         this.setLocation(200, 10);
         this.setContentPane(pnMain);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -155,7 +163,9 @@ public class Loginn extends JFrame implements ActionListener {
             } catch (Exception k) {
                 k.printStackTrace();
             }
-
+        }else if((e.getSource() instanceof JButton) && (((JButton) e.getSource()).equals(btnSign))){
+            new Signin().setVisible(true);
+            this.dispose(); // Đóng màn hình đăng nhập
         }
     }
     
