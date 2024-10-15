@@ -1,4 +1,3 @@
-
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -65,7 +64,12 @@ public class Loginn extends JFrame implements ActionListener {
         pnPass.add(txtPassword);
         pnMain.add(pnPass);
         
-        pnMain.add(btnLogin);    
+        // Tạo panel cho nút Login và căn giữa
+        JPanel pnLoginButton = new JPanel();
+        pnLoginButton.setLayout(new FlowLayout(FlowLayout.CENTER)); // Căn giữa
+        pnLoginButton.add(btnLogin);
+        pnMain.add(pnLoginButton);
+          
         pnMain.add(Box.createRigidArea(new Dimension(0, 10)));
         btnLogin.addActionListener(this);    
 
@@ -91,8 +95,8 @@ public class Loginn extends JFrame implements ActionListener {
             try {
                 // URL đích
                 @SuppressWarnings("deprecation")
-                //URL url = new URL("http://10.21.45.117:8080/login"); // Thay đổi URL này thành URL bạn muốn gửi yêu cầu tới
-                URL url = new URL("https://5684-117-5-79-91.ngrok-free.app/login");
+                //URL url = new URL("https://10.21.45.117:8080/login"); // Thay đổi URL này thành URL bạn muốn gửi yêu cầu tới
+                URL url = new URL("http://localhost:8080/login");
                 //ngrok http 8080
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 

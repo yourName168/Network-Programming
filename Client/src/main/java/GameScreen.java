@@ -12,7 +12,22 @@ import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 
-public class GameScreen extends JFrame {
+public class GameScreen extends JFrame{
+    class CustomPanel extends JPanel {
+    private Image backgroundImage;
+    public CustomPanel() {
+        // Tải hình nền từ đường dẫn bạn đã cung cấp
+        backgroundImage = new ImageIcon("Image/background.png").getImage();
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        // Vẽ hình nền lên toàn bộ panel
+        g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+    }
+}
+
     private List<String> allColors;
     private List<String> displayedColors;
     private List<String> correctColors;
@@ -85,13 +100,17 @@ public class GameScreen extends JFrame {
     }
 
     private void showColors() {
-        colorPanel = new JPanel();
-        colorPanel.setLayout(new GridLayout(4, 5)); // Hiển thị 4 hàng, 5 cột
+        JPanel infoPanel = new JPanel();
+        infoPanel.setLayout(new FlowLayout());
+
+        colorPanel = new CustomPanel();
+        colorPanel.setLayout(new GridLayout(4, 5, 15, 15));
+        colorPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
 
         for (String color : displayedColors) {
             JButton colorButton = new JButton(color);
             colorButton.setBackground(getColorFromString(color));
-            colorButton.setForeground(Color.WHITE);
+            colorButton.setForeground(Color.BLACK);
             colorButton.setFont(new Font("Arial", Font.BOLD, 14));
             colorButton.setFocusPainted(false);
             colorButton.addActionListener(new ActionListener() {
@@ -103,16 +122,29 @@ public class GameScreen extends JFrame {
             colorPanel.add(colorButton);
         }
 
-        // Tạo và hiển thị thông báo
-        JPanel infoPanel = new JPanel();
-        infoPanel.setLayout(new FlowLayout());
-        infoPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+         // Tạo và hiển thị thông báo với icon
+        ImageIcon originalIcon = new ImageIcon("Image/siamese-cat.png");
+        // Thay đổi kích thước icon
+        Image iconImage = originalIcon.getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH);
+        ImageIcon scaledIcon = new ImageIcon(iconImage);
+        JLabel iconLabel = new JLabel(scaledIcon);
+
+        // Tạo icon thứ hai
+        ImageIcon secondIcon = new ImageIcon("Image/color-palette.png"); // Đường dẫn icon thứ hai
+        Image secondIconImage = secondIcon.getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH);
+        ImageIcon scaledSecondIcon = new ImageIcon(secondIconImage);
+        JLabel secondIconLabel = new JLabel(scaledSecondIcon);
+
         JLabel infoLabel = new JLabel("Chọn ba màu đã được hiển thị trước đó!");
-        infoLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        infoLabel.setFont(new Font("Arial", Font.BOLD, 20));
+
+        // Thêm icon và tiêu đề vào panel
+        infoPanel.add(iconLabel);
         infoPanel.add(infoLabel);
+        infoPanel.add(secondIconLabel); // Thêm icon thứ hai
 
         submitButton = new JButton("Gửi");
-        submitButton.setFont(new Font("Arial", Font.BOLD, 16));
+        submitButton.setFont(new Font("Arial", Font.BOLD, 18));
         submitButton.setBackground(new Color(34, 139, 34)); // Màu xanh lá cây
         submitButton.setForeground(Color.WHITE);
         submitButton.setFocusPainted(false);
@@ -124,12 +156,13 @@ public class GameScreen extends JFrame {
         });
 
         JPanel buttonPanel = new JPanel();
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         buttonPanel.add(submitButton);
 
-        // Thêm các thành phần vào JFrame
         add(infoPanel, BorderLayout.NORTH);
         add(colorPanel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
+        setVisible(true);
     }
 
     private void handleColorSelection(JButton button, String color) {

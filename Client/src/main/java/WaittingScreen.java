@@ -16,6 +16,7 @@ import org.springframework.messaging.simp.stomp.*;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 import org.springframework.web.socket.WebSocketHttpHeaders;
+import javax.swing.table.JTableHeader;
 
 public class WaittingScreen extends JFrame implements ActionListener {
     private StompSession stompSession;
@@ -60,7 +61,7 @@ public class WaittingScreen extends JFrame implements ActionListener {
         connectHeaders.add("username", user.getUsername());
     
         //String url = "ws://10.21.45.117:8080/ws";
-        String url = "wss://5684-117-5-79-91.ngrok-free.app/ws";
+        String url = "ws://localhost:8080/ws";
 
         //StompSession session = stompClient.connect(url, new StompSessionHandlerAdapter() {}).get();
         StompSession session = stompClient.connect(url, new WebSocketHttpHeaders(), connectHeaders, new StompSessionHandlerAdapter() {}).get();
@@ -193,8 +194,15 @@ public class WaittingScreen extends JFrame implements ActionListener {
             data[i][3] = user.getStatus();
         }
         tblTable = new JTable(data, columnNames);
-        tblTable.setBackground(new java.awt.Color(102, 204, 255));
+        tblTable.setBackground(new java.awt.Color(173, 216, 230));
         tblTable.setForeground(new java.awt.Color(0, 0, 0));
+         // Thiết lập kích thước của bảng
+        tblTable.setRowHeight(30); // Thay đổi chiều cao dòng
+        tblTable.setFont(new Font("Arial", Font.PLAIN, 16)); // Thay đổi font chữ
+        JTableHeader tableHeader = tblTable.getTableHeader();
+        tableHeader.setFont(new Font("Arial", Font.BOLD, 18)); // In đậm và phóng to chữ
+         
+
         JScrollPane scrollPane = new JScrollPane(tblTable);
         panel.add(scrollPane, BorderLayout.CENTER);
 
@@ -208,15 +216,24 @@ public class WaittingScreen extends JFrame implements ActionListener {
                 }
             }
         });
+        
+        ImageIcon originalIcon = new ImageIcon("Image/addfriend.png"); // Thay thế bằng đường dẫn đến biểu tượng của bạn
+        Image image = originalIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH); // Thay đổi kích thước hình ảnh
+        ImageIcon resizedIcon = new ImageIcon(image); // Tạo ImageIcon mới từ hình ảnh đã thay đổi kích thước
 
-        btnStart = new JButton("Mời");
+        btnStart = new JButton("Mời", resizedIcon); // Thêm biểu tượng vào nút
+        btnStart.setBackground(new Color(60, 179, 113)); // Màu nền của nút
+        btnStart.setForeground(Color.WHITE); // Màu chữ của nút
+        btnStart.setFont(new Font("Arial", Font.BOLD, 16)); // Font chữ
+        btnStart.setPreferredSize(new Dimension(150, 40)); // Kích thước nút
+        btnStart.setCursor(new Cursor(Cursor.HAND_CURSOR)); // Con trỏ khi rê chuột lên nút
         btnStart.addActionListener(this);
         panel.add(btnStart, BorderLayout.SOUTH);
 
         this.add(panel);
         this.setSize(800, 600);
         this.setLocationRelativeTo(null);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
     }
 
     @Override

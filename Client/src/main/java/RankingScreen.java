@@ -8,6 +8,7 @@ import java.net.URL;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.messaging.simp.stomp.StompSession;
+import javax.swing.table.JTableHeader;
 
 public class RankingScreen extends JFrame {
     private StompSession stompSession;
@@ -22,15 +23,24 @@ public class RankingScreen extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        // Header Panel
+         // Header Panel
         JPanel headerPanel = new JPanel();
         headerPanel.setBackground(new Color(70, 130, 180)); 
-        JLabel rankingLabel = new JLabel("XẾP HẠNG", SwingConstants.CENTER);
+        headerPanel.setLayout(new FlowLayout()); // Sử dụng FlowLayout để xếp các phần tử
+
+        // Thêm biểu tượng huy chương
+        ImageIcon medalIcon = new ImageIcon("Image/rank.jpg"); // Đường dẫn đến biểu tượng huy chương
+        Image medalImage = medalIcon.getImage().getScaledInstance(50, 40, Image.SCALE_SMOOTH); // Thay đổi kích thước hình ảnh
+        medalIcon = new ImageIcon(medalImage); // Tạo ImageIcon mới với hình ảnh đã thay đổi kích thước
+        JLabel medalLabel = new JLabel(medalIcon);
+        
+        JLabel rankingLabel = new JLabel(" XẾP HẠNG", SwingConstants.CENTER);
         rankingLabel.setFont(new Font("Arial", Font.BOLD, 28));
         rankingLabel.setForeground(Color.WHITE);
+        
+        headerPanel.add(medalLabel);
         headerPanel.add(rankingLabel);
         add(headerPanel, BorderLayout.NORTH);
-
         // Table Panel
         JPanel tablePanel = new JPanel(new BorderLayout());
         tablePanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
@@ -46,7 +56,13 @@ public class RankingScreen extends JFrame {
         rankingTable.setForeground(Color.BLACK);
         rankingTable.setBorder(BorderFactory.createLineBorder(new Color(70, 130, 180), 2));
         rankingTable.setEnabled(false); // Make the table non-editable
-
+        
+        // Customize table header
+        JTableHeader tableHeader = rankingTable.getTableHeader();
+        tableHeader.setFont(new Font("Arial", Font.BOLD, 20)); // Đặt kiểu và cỡ chữ cho tiêu đề cột
+        tableHeader.setBackground(new Color(70, 130, 180)); // Đặt màu nền cho tiêu đề
+        tableHeader.setForeground(Color.WHITE); // Đặt màu chữ cho tiêu đề
+        
         JScrollPane scrollPane = new JScrollPane(rankingTable);
         tablePanel.add(scrollPane, BorderLayout.CENTER);
 
@@ -75,7 +91,7 @@ public class RankingScreen extends JFrame {
     private void showRankingData() {
         try {
             //URL url = new URL("http://10.21.45.117:8080/rankk"); // URL cho GET request
-            URL url = new URL("https://5684-117-5-79-91.ngrok-free.app/rankk"); // URL cho GET request
+            URL url = new URL("http://localhost:8080/rankk"); // URL cho GET request
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             conn.setRequestMethod("GET");
