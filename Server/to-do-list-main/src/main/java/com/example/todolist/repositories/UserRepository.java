@@ -23,6 +23,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
   @Query("SELECT u.name, u.score, u.status FROM User u ORDER BY u.score DESC")
   List<Object[]> findAllUsersWithSelectedColumnsforranh();
 
+  @Query("SELECT u.id, u.username, u.name, u.score, u.status FROM User u WHERE u.name like :input")
+  List<Object[]> searchUser(String input);
+
   // Phương thức cập nhật điểm số
   @Modifying
   @Transactional

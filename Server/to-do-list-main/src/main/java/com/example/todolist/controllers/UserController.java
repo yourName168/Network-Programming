@@ -82,4 +82,11 @@ public class UserController {
     return new ResponseEntity<>(successResponse, HttpStatus.OK);
   }
 
+  @GetMapping("/search")
+  public ResponseEntity<Map<String, ?>> search(@RequestBody String input) {
+    System.out.println("Username nhận được: " + input);
+    Map<String, Object> successResponse = new HashMap<>();
+    successResponse.put("list", userRepository.searchUser(input));
+    return new ResponseEntity<>(successResponse, HttpStatus.OK);
+  }
 }
